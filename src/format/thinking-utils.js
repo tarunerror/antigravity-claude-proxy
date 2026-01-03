@@ -388,23 +388,24 @@ export function analyzeConversationState(messages) {
 /**
  * Check if conversation needs thinking recovery.
  *
- * For Gemini: recovery needed when (tool loop OR interrupted tool) AND no valid thinking
- * For Claude: recovery needed when no valid compatible thinking (cross-model detection)
+ * Recovery is only needed when:
+ * 1. We're in a tool loop or have an interrupted tool, AND
+ * 2. No valid thinking blocks exist in the current turn
+ *
+ * Cross-model signature compatibility is handled by stripInvalidThinkingBlocks
+ * during recovery (not here).
  *
  * @param {Array<Object>} messages - Array of messages
- * @param {string} targetFamily - Target model family ('claude' or 'gemini')
  * @returns {boolean} True if thinking recovery is needed
  */
-export function needsThinkingRecovery(messages, targetFamily = null) {
+export function needsThinkingRecovery(messages) {
     const state = analyzeConversationState(messages);
 
-    if (targetFamily === 'claude') {
-        // Claude: only check if thinking is valid/compatible
-        return !state.turnHasThinking;
-    }
+    // Recovery is only needed in tool loops or interrupted tools
+    if (!state.inToolLoop && !state.interruptedTool) return false;
 
-    // Gemini (default): check tool loop/interrupted AND no thinking
-    return (state.inToolLoop || state.interruptedTool) && !state.turnHasThinking;
+    // Need recovery if no valid thinking blocks exist
+    return !state.turnHasThinking;
 }
 
 /**

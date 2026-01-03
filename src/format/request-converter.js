@@ -83,7 +83,7 @@ export function convertAnthropicToGoogle(anthropicRequest) {
     let processedMessages = messages;
     const targetFamily = isClaudeModel ? 'claude' : isGeminiModel ? 'gemini' : null;
 
-    if (isThinking && targetFamily && needsThinkingRecovery(messages, targetFamily)) {
+    if (isThinking && targetFamily && needsThinkingRecovery(messages)) {
         logger.debug(`[RequestConverter] Applying thinking recovery for ${targetFamily}`);
         processedMessages = closeToolLoopForThinking(messages, targetFamily);
     }
