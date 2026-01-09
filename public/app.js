@@ -165,11 +165,9 @@ document.addEventListener('alpine:init', () => {
                             clearInterval(pollInterval);
                             Alpine.store('global').oauthProgress.active = false;
 
-                            const actionKey = reAuthEmail ? 'reauthenticated' : 'added';
-                            const action = Alpine.store('global').t(actionKey);
-                            const successfully = Alpine.store('global').t('successfully');
+                            const actionKey = reAuthEmail ? 'accountReauthSuccess' : 'accountAddedSuccess';
                             Alpine.store('global').showToast(
-                                `${Alpine.store('global').t('accounts')} ${action} ${successfully}`,
+                                Alpine.store('global').t(actionKey),
                                 'success'
                             );
                             document.getElementById('add_account_modal')?.close();

@@ -45,7 +45,7 @@
             <div class="stat-title text-gray-500 font-mono text-xs uppercase tracking-wider truncate"
                 x-text="$store.global.t('totalAccounts')"></div>
             <div class="stat-desc text-cyan-400/60 text-[10px] truncate flex items-center gap-1">
-                <span x-text="$store.global.t('registeredNodes')"></span>
+                <span x-text="$store.global.t('linkedAccounts')"></span>
                 <svg class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
@@ -219,7 +219,7 @@
                                 x-text="displayMode === 'family' ? $store.global.t('selectFamilies') : $store.global.t('selectModels')"></span>
                             <div class="flex gap-1">
                                 <button @click="autoSelectTopN(5)" class="text-[10px] text-neon-purple hover:underline"
-                                    :title="$store.global.t('smartTitle')" x-text="$store.global.t('smart')">
+                                    :title="$store.global.t('smartTitle')" x-text="$store.global.t('frequentModels')">
                                     Smart
                                 </button>
                                 <span class="text-gray-600">|</span>
