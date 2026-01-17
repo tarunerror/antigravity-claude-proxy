@@ -111,7 +111,7 @@ src/
 │   └── signature-cache.js      # Signature cache (tool_use + thinking signatures)
 │
 └── utils/                      # Utilities
-    ├── helpers.js              # formatDuration, sleep
+    ├── helpers.js              # formatDuration, sleep, isNetworkError
     ├── logger.js               # Structured logging
     └── native-module-helper.js # Auto-rebuild for native modules
 ```
@@ -137,7 +137,6 @@ public/
 │   │   ├── account-manager.js  # Account list & OAuth handling
 │   │   ├── logs-viewer.js      # Live log streaming
 │   │   ├── claude-config.js    # CLI settings editor
-│   │   ├── model-manager.js    # Model configuration UI
 │   │   ├── server-config.js    # Server settings UI
 │   │   └── dashboard/          # Dashboard sub-modules
 │   │       ├── stats.js        # Account statistics calculation

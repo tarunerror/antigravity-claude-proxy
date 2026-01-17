@@ -103,6 +103,23 @@ app.use('/v1', (req, res, next) => {
 // Setup usage statistics middleware
 usageStats.setupMiddleware(app);
 
+/**
+ * Silent handler for Claude Code CLI root POST requests
+ * Claude Code sends heartbeat/event requests to POST / which we don't need
+ * Using app.use instead of app.post for earlier middleware interception
+ */
+app.use((req, res, next) => {
+    // Handle Claude Code event logging requests silently
+    if (req.method === 'POST' && req.path === '/api/event_logging/batch') {
+        return res.status(200).json({ status: 'ok' });
+    }
+    // Handle Claude Code root POST requests silently
+    if (req.method === 'POST' && req.path === '/') {
+        return res.status(200).json({ status: 'ok' });
+    }
+    next();
+});
+
 // Mount WebUI (optional web interface for account management)
 mountWebUI(app, __dirname, accountManager);
 
@@ -162,7 +179,7 @@ app.use((req, res, next) => {
         const logMsg = `[${req.method}] ${req.path} ${status} (${duration}ms)`;
 
         // Skip standard logging for event logging batch unless in debug mode
-        if (req.path === '/api/event_logging/batch') {
+        if (req.path === '/api/event_logging/batch' || req.path === '/v1/messages/count_tokens') {
             if (logger.isDebugEnabled) {
                 logger.debug(logMsg);
             }
@@ -179,6 +196,14 @@ app.use((req, res, next) => {
     });
 
     next();
+});
+
+/**
+ * Silent handler for Claude Code CLI root POST requests
+ * Claude Code sends heartbeat/event requests to POST / which we don't need
+ */
+app.post('/', (req, res) => {
+    res.status(200).json({ status: 'ok' });
 });
 
 /**
@@ -810,6 +835,7 @@ app.post('/v1/messages', async (req, res) => {
 usageStats.setupRoutes(app);
 
 app.use('*', (req, res) => {
+    // Log 404s (use originalUrl since wildcard strips req.path)
     if (logger.isDebugEnabled) {
         logger.debug(`[API] 404 Not Found: ${req.method} ${req.originalUrl}`);
     }
